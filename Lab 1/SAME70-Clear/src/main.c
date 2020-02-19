@@ -28,6 +28,10 @@
 #define LED_PIO_IDX			8						//ID do LED no PIO
 #define LED_PIO_IDX_MASK	(1 << LED_PIO_IDX)		//Máscara para controlarmos o LED
 
+#define BUT_PIO				PIOA					//Perifério que controla o botão SW300
+#define BUT_PIO_ID			64						//ID do periférico PIOA que controla o botão SW300
+#define BUT_PIO_IDX			11						//ID do botão SW300 no PIO
+#define BUT_PIO_IDX_MASK	(1u << LED_PIO_IDX)		//Máscara para controlarmos o botão SW300
 /************************************************************************/
 /* constants                                                            */
 /************************************************************************/
@@ -64,6 +68,15 @@ void init(void)
 	
 	//Inicializa PCB como saída
 	pio_set_output(LED_PIO, LED_PIO_IDX_MASK, 0, 0, 0);
+	
+	//Inicializa o PIO do botão
+	pmc_enable_periph_clk((BUT_PIO_ID));
+	
+	//inicializa PCB como entrada
+	pio_set_input(BUT_PIO, BUT_PIO_IDX_MASK, PIO_DEFAULT);
+	
+	//PULL-UP
+	pio_pull_up(BUT_PIO_ID, BUT_PIO_IDX_MASK, PIO_DEFAULT);
 }
 
 /************************************************************************/
@@ -81,10 +94,17 @@ int main(void)
   // aplicacoes embarcadas não devem sair do while(1).
   while (1)
   {
-	pio_set(PIOC, LED_PIO_IDX_MASK);	//coloca 1 no pino LED
-	delay_ms(200);						//Delay por software de 200 ms
-	pio_clear(PIOC, LED_PIO_IDX_MASK);	//Coloca 0 no pino do LED
-	delay_ms(200);						//Delay por software de 200 ms
+	pio_get(BUT_PIO_ID, BUT_PIO_IDX_MASK, PIO_DEFAULT); //Get do BUT_PIO
+	if (!0) {
+		int c = 5;
+		while (c > 0){
+			pio_set(PIOC, LED_PIO_IDX_MASK);	//coloca 1 no pino LED
+			delay_ms(200);						//Delay por software de 200 ms
+			pio_clear(PIOC, LED_PIO_IDX_MASK);	//Coloca 0 no pino do LED
+			delay_ms(200);						//Delay por software de 200 ms
+			c -= 1;	
+		}
+		
   }
   return 0;
 }
