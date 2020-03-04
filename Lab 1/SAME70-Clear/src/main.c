@@ -24,14 +24,14 @@
 /************************************************************************/
 
 #define LED_PIO				PIOC					//Perifério que controla o LED
-#define LED_PIO_ID			12						//ID do periférico PIOC que controla o LED
+#define LED_PIO_ID			ID_PIOC						//ID do periférico PIOC que controla o LED
 #define LED_PIO_IDX			8						//ID do LED no PIO
 #define LED_PIO_IDX_MASK	(1 << LED_PIO_IDX)		//Máscara para controlarmos o LED
 
 #define BUT_PIO				PIOA					//Perifério que controla o botão SW300
-#define BUT_PIO_ID			64						//ID do periférico PIOA que controla o botão SW300
+#define BUT_PIO_ID			ID_PIOA						//ID do periférico PIOA que controla o botão SW300
 #define BUT_PIO_IDX			11						//ID do botão SW300 no PIO
-#define BUT_PIO_IDX_MASK	(1u << LED_PIO_IDX)		//Máscara para controlarmos o botão SW300
+#define BUT_PIO_IDX_MASK	(1 << BUT_PIO_IDX)		//Máscara para controlarmos o botão SW300
 /************************************************************************/
 /* constants                                                            */
 /************************************************************************/
@@ -76,7 +76,7 @@ void init(void)
 	pio_set_input(BUT_PIO, BUT_PIO_IDX_MASK, PIO_DEFAULT);
 	
 	//PULL-UP
-	pio_pull_up(BUT_PIO_ID, BUT_PIO_IDX_MASK, PIO_DEFAULT);
+	pio_pull_up(BUT_PIO, BUT_PIO_IDX_MASK, 1);
 }
 
 /************************************************************************/
@@ -90,21 +90,21 @@ int main(void)
   init();
  
 
-  // super loop
+  // super loop	
   // aplicacoes embarcadas não devem sair do while(1).
   while (1)
   {
-	pio_get(BUT_PIO_ID, BUT_PIO_IDX_MASK, PIO_DEFAULT); //Get do BUT_PIO
-	if (!0) {
-		int c = 5;
-		while (c > 0){
+	pio_get(BUT_PIO, PIO_INPUT, BUT_PIO_IDX_MASK); //Get do BUT_PIO
+	
+	if (!pio_get(BUT_PIO, PIO_INPUT, BUT_PIO_IDX_MASK)) {
+		
+		for (int i = 0; i<5; i++){
 			pio_set(PIOC, LED_PIO_IDX_MASK);	//coloca 1 no pino LED
 			delay_ms(200);						//Delay por software de 200 ms
 			pio_clear(PIOC, LED_PIO_IDX_MASK);	//Coloca 0 no pino do LED
-			delay_ms(200);						//Delay por software de 200 ms
-			c -= 1;	
+			delay_ms(200);						//Delay por software de 200 ms	
 		}
-		
+	}
   }
   return 0;
 }
