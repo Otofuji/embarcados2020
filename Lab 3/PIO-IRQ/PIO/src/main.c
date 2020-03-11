@@ -141,7 +141,8 @@ void main(void)
 		if (but_flag) {
 			pisca_led(5, 200);
 			but_flag = 0;
-			pmc_sleep(SAM_PM_SMODE_SLEEP_WFI);
+			
 	  }
+	  pmc_sleep(SAM_PM_SMODE_SLEEP_WFI);
 	}
 }

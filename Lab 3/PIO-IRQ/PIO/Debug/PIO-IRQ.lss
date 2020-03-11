@@ -4387,7 +4387,7 @@ void main(void)
   401a96:	781b      	ldrb	r3, [r3, #0]
   401a98:	b2db      	uxtb	r3, r3
   401a9a:	2b00      	cmp	r3, #0
-  401a9c:	d0fa      	beq.n	401a94 <main+0x14>
+  401a9c:	d006      	beq.n	401aac <main+0x2c>
 			pisca_led(5, 200);
   401a9e:	21c8      	movs	r1, #200	; 0xc8
   401aa0:	2005      	movs	r0, #5
@@ -4397,7 +4397,9 @@ void main(void)
   401aa6:	4b06      	ldr	r3, [pc, #24]	; (401ac0 <main+0x40>)
   401aa8:	2200      	movs	r2, #0
   401aaa:	701a      	strb	r2, [r3, #0]
-			pmc_sleep(SAM_PM_SMODE_SLEEP_WFI);
+			
+	  }
+	  pmc_sleep(SAM_PM_SMODE_SLEEP_WFI);
   401aac:	2002      	movs	r0, #2
   401aae:	4b06      	ldr	r3, [pc, #24]	; (401ac8 <main+0x48>)
   401ab0:	4798      	blx	r3
