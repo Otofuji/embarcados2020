@@ -167,6 +167,7 @@ src/main.d src/main.o: ../src/main.c ../src/asf.h \
  ../src/ASF/common/services/sleepmgr/sam/sleepmgr.h \
  ../src/ASF/sam/applications/same70_xplained_demo/same70q21_same70_xplained/conf_sleepmgr.h \
  ../src/ASF/sam/boards/same70_xplained/led.h \
+ ../src/ASF/sam/components/memory/sdram/is42s16100e/is42s16100e.h \
  ../src/ASF/common/services/spi/sam_spi/spi_master.h \
  ../src/ASF/sam/drivers/spi/spi.h ../src/config/conf_spi_master.h \
  ../src/ASF/common/services/sleepmgr/sam/sleepmgr.h \
@@ -528,6 +529,8 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 ../src/ASF/sam/applications/same70_xplained_demo/same70q21_same70_xplained/conf_sleepmgr.h:
 
 ../src/ASF/sam/boards/same70_xplained/led.h:
+
+../src/ASF/sam/components/memory/sdram/is42s16100e/is42s16100e.h:
 
 ../src/ASF/common/services/spi/sam_spi/spi_master.h:
 
