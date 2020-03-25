@@ -4,16 +4,6 @@
 #include "gfx_mono_text.h"
 #include "sysfont.h"
 
-typedef struct  {
-  uint32_t year;
-  uint32_t month;
-  uint32_t day;
-  uint32_t week;
-  uint32_t hour;
-  uint32_t minute;
-  uint32_t seccond;
-} calendar;
-
 /************************************************************************/
 /* DEFINES                                                              */
 /************************************************************************/
@@ -30,7 +20,7 @@ typedef struct  {
   uint32_t week;
   uint32_t hour;
   uint32_t minute;
-  uint32_t seccond;
+  uint32_t second;
 } calendar;
 
 /**
@@ -303,10 +293,9 @@ int main (void)
 
   // Init OLED
 	gfx_mono_ssd1306_init();
-  
-  // Escreve na tela um circulo e um texto
-	gfx_mono_draw_filled_circle(20, 16, 16, GFX_PIXEL_SET, GFX_WHOLE);
-  gfx_mono_draw_string("mundo", 50,16, &sysfont);
+
+	gfx_mono_draw_string(" Wisteria", 10,16, &sysfont);
+	gfx_mono_draw_string("Spirit of", 10,0, &sysfont);
 
   /* Insert application code here, after the board has been initialized. */
 	while(1) {
