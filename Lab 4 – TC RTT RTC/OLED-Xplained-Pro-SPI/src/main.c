@@ -297,8 +297,71 @@ int main (void)
 	gfx_mono_draw_string(" Wisteria", 10,16, &sysfont);
 	gfx_mono_draw_string("Spirit of", 10,0, &sysfont);
 
+// RTC
+	/* Initialize the SAM system */
+	sysclk_init();
+
+	/* Disable the watchdog */
+	WDT->WDT_MR = WDT_MR_WDDIS;
+
+	/* Configura Leds */
+	LED_init(0);
+
+	/** Configura RTC */
+  calendar rtc_initial = {2018, 3, 19, 12, 15, 45 ,1};
+	RTC_init(RTC, ID_RTC, rtc_initial, RTC_IER_ALREN);
+
+	/* configura alarme do RTC */
+	rtc_set_date_alarm(RTC, 1, rtc_initial.month, 1, rtc_initial.day);
+	rtc_set_time_alarm(RTC, 1, rtc_initial.hour, 1, rtc_initial.minute, 1, rtc_initial.seccond + 20);
+
+//RTT
+	// Desliga watchdog
+	WDT->WDT_MR = WDT_MR_WDDIS;
+  
+  sysclk_init();
+  io_init();
+  
+  // Inicializa RTT com IRQ no alarme.
+  f_rtt_alarme = true;
+
+//TC
+	/* Initialize the SAM system */
+	sysclk_init();
+
+	/* Disable the watchdog */
+	WDT->WDT_MR = WDT_MR_WDDIS;
+
+	/* Configura Leds */
+	LED_init(0);
+	TC_init(TC0, ID_TC1, 1, 4);
+
   /* Insert application code here, after the board has been initialized. */
 	while(1) {
+		if(flag_rtc){
+      	pisca_led(5, 200);
+      	flag_rtc = 0;
+	}
+
+		if (f_rtt_alarme){
+      
+      /*
+       * IRQ apos 4s -> 8*0.5
+       */
+      uint16_t pllPreScale = (int) (((float) 32768) / 4.0);
+      uint32_t irqRTTvalue = 8;
+      
+      // reinicia RTT para gerar um novo IRQ
+      RTT_init(pllPreScale, irqRTTvalue);         
+      
+      f_rtt_alarme = false;
 
 	}
+
+	if(flag_tc){
+      pisca_led(1,10);
+      flag_tc = 0;
+    }
+
+	
 }
