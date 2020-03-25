@@ -339,7 +339,7 @@ int main (void)
   /* Insert application code here, after the board has been initialized. */
 	while(1) {
 		if(flag_rtc){
-      	pisca_led(5, 200);
+      	//pisca_led(5, 200);
       	flag_rtc = 0;
 	}
 
@@ -359,7 +359,7 @@ int main (void)
 	}
 
 	if(flag_tc){
-      pisca_led(1,10);
+      //pisca_led(1,10);
       flag_tc = 0;
     }
 
