@@ -350,15 +350,15 @@ int main (void)
 	/* Insert application code here, after the board has been initialized. */
 	while(1) {
 		if(flag_rtc){
-<<<<<<< HEAD
+
 			//pisca_led1(5, 200);
 			flag_rtc = 0;
 		}
-=======
+
       	//pisca_led(5, 200);
       	flag_rtc = 0;
 	}
->>>>>>> a509f4612c61999e1c668e6c3f2297397f8334a1
+
 
 		if (f_rtt_alarme){
 			
@@ -380,8 +380,8 @@ int main (void)
 			flag_tc = 0;
 		}
 	}
-<<<<<<< HEAD
-=======
+
+
 
 	if(flag_tc){
       //pisca_led(1,10);
@@ -389,6 +389,6 @@ int main (void)
     }
 
 	
->>>>>>> a509f4612c61999e1c668e6c3f2297397f8334a1
+
 }
 
