@@ -10,12 +10,45 @@
 #define TASK_LED_STACK_SIZE                (1024/sizeof(portSTACK_TYPE))
 #define TASK_LED_STACK_PRIORITY            (tskIDLE_PRIORITY)
 
+#define TASK_LED1_STACK_SIZE (1024/sizeof(portSTACK_TYPE))
+#define TASK_LED1_STACK_PRIORITY (tskIDLE_PRIORITY)
+
+/**
+* LEDs OLED
+*/
+#define LED1_PIO_ID	    ID_PIOA
+#define LED1_PIO         PIOA
+#define LED1_PIN		      0
+#define LED1_IDX_MASK    (1<<LED1_PIN)
+
+#define LED2_PIO_ID	    ID_PIOC
+#define LED2_PIO         PIOC
+#define LED2_PIN		      30
+#define LED2_IDX_MASK    (1<<LED2_PIN)
+
+#define LED3_PIO_ID	    ID_PIOB
+#define LED3_PIO         PIOB
+#define LED3_PIN		      2
+#define LED3_IDX_MASK    (1<<LED3_PIN
+
+
+
+
+#define BUT1_PIO            PIOD
+#define BUT1_PIO_ID         16
+#define BUT1_PIO_IDX        28
+#define BUT1_PIO_IDX_MASK   (1u << BUT1_PIO_IDX)
+
+
+
 extern void vApplicationStackOverflowHook(xTaskHandle *pxTask,
 		signed char *pcTaskName);
 extern void vApplicationIdleHook(void);
 extern void vApplicationTickHook(void);
 extern void vApplicationMallocFailedHook(void);
 extern void xPortSysTickHandler(void);
+
+SemaphoreHandle_t xSemaphore;
 
 /**
  * \brief Called if stack overflow during execution
@@ -70,21 +103,93 @@ static void task_monitor(void *pvParameters)
 		printf("--- task ## %u\n", (unsigned int)uxTaskGetNumberOfTasks());
 		vTaskList((signed portCHAR *)szList);
 		printf(szList);
-		vTaskDelay(1000);
+		vTaskDelay(3000);
 	}
 }
 
 /**
  * \brief This task, when activated, make LED blink at a fixed rate
  */
+
+
+void but1_callback(void){
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	printf("but_callback \n");
+	xSemaphoreGiveFromISR(xSemaphore, &xHigherPriorityTaskWoken);
+	printf("semafaro tx \n");
+}
+
+
 static void task_led(void *pvParameters)
 {
-	UNUSED(pvParameters);
+	/* Block for 2000ms. */
+	const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
+
 	for (;;) {
 		LED_Toggle(LED0);
-		vTaskDelay(1000);
+		vTaskDelay(xDelay);
 	}
 }
+
+static void task_led1(void *pvParameters)
+{
+	/* Block for 2000ms. */
+	const TickType_t xDelay = 2000 / portTICK_PERIOD_MS;
+	int flag = 0;
+
+	for (;;) {/* We are using the semaphore for synchronisation so we create a binary
+  semaphore rather than a mutex.  We must make sure that the interrupt
+  does not attempt to use the semaphore before it is created! */
+  xSemaphore = xSemaphoreCreateBinary();
+
+  /* devemos iniciar a interrupcao no pino somente apos termos alocado
+  os recursos (no caso semaforo), nessa funcao inicializamos 
+  o botao e seu callback*/
+  /* init botão */
+  pmc_enable_periph_clk(BUT1_PIO_ID);
+  pio_configure(BUT1_PIO, PIO_INPUT, BUT1_PIO_IDX_MASK, PIO_PULLUP);
+  pio_handler_set(BUT1_PIO, BUT1_PIO_ID, BUT1_PIO_IDX_MASK, PIO_IT_FALL_EDGE, but1_callback);
+  pio_enable_interrupt(BUT1_PIO, BUT1_PIO_IDX_MASK);
+  NVIC_EnableIRQ(BUT1_PIO_ID);
+  NVIC_SetPriority(BUT1_PIO_ID, 4); // Prioridade 4
+
+  if (xSemaphore == NULL)
+    printf("falha em criar o semaforo \n");
+
+  for (;;) {
+    if( xSemaphoreTake(xSemaphore, ( TickType_t ) 500) == pdTRUE ){
+      	if (flag == 1) {
+	      	pio_clear(LED1_PIO, LED1_IDX_MASK);
+	      	flag = 0;
+      	}
+      	
+      	else {
+	      	pio_set(LED1_PIO, LED1_IDX_MASK);
+	      	flag = 1;
+      	}
+    }
+  }
+
+		
+		
+			
+			
+		
+
+		//vTaskDelay(xDelay);
+	}
+}
+
+
+
+void init (void){
+	
+	
+			 pmc_enable_periph_clk(LED1_PIO_ID);
+			 pio_configure(LED1_PIO, PIO_OUTPUT_0, LED1_IDX_MASK, PIO_DEFAULT);
+}
+
+
 
 /**
  * \brief Configure the console UART.
@@ -129,6 +234,8 @@ int main(void)
 	/* Initialize the console uart */
 	configure_console();
 
+
+	init();
 	/* Output demo information. */
 	printf("-- Freertos Example --\n\r");
 	printf("-- %s\n\r", BOARD_NAME);
@@ -146,7 +253,13 @@ int main(void)
 			TASK_LED_STACK_PRIORITY, NULL) != pdPASS) {
 		printf("Failed to create test led task\r\n");
 	}
-
+	
+	/* Create task to make led blink */
+	if (xTaskCreate(task_led1, "Led1", TASK_LED_STACK_SIZE, NULL,
+	TASK_LED_STACK_PRIORITY, NULL) != pdPASS) {
+		printf("Failed to create test led task\r\n");
+	}
+	
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
