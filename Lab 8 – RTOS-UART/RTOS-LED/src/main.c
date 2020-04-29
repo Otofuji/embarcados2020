@@ -47,6 +47,7 @@ extern void vApplicationMallocFailedHook(void);
 extern void xPortSysTickHandler(void);
 
 SemaphoreHandle_t xSemaphore;
+QueueHandle_t xQueueUART;
 
 void USART1_Handler(void){
 	uint32_t ret = usart_get_status(USART1);
@@ -60,7 +61,8 @@ void USART1_Handler(void){
 	//  Dados disponível para leitura
 	if(ret & US_IER_RXRDY){
 		usart_serial_getchar(USART1, &c);
-		printf("%c", c);
+	//	printf("%c", c);
+		xQueueSendFromISR(xQueueUART, &c, 0);
 
 		// -  Transmissoa finalizada
 		} else if(ret & US_IER_TXRDY){
@@ -144,6 +146,35 @@ void but1_callback(void){
 	xSemaphoreGiveFromISR(xSemaphore, &xHigherPriorityTaskWoken);
 	printf("semafaro tx \n");
 }
+
+
+void task_uart(void *pvParameters){
+	
+
+	char c;
+	char  s[32];
+	int i = 0 ;
+	while(1){
+		
+		
+		 if (xQueueReceive( xQueueUART, &(c), ( TickType_t )  100 / portTICK_PERIOD_MS)) {
+			if(c != '\n'){
+				s[i]=c;
+				i++;
+			}else {
+				s[i]=0;
+					i = 0 ;
+					printf(s);	
+			}
+			
+		
+		 }
+	
+		
+	}
+}
+
+
 
 
 static void task_led(void *pvParameters)
@@ -296,6 +327,7 @@ int main(void)
 	board_init();
 
 	/* Initialize the console uart */
+	xQueueUART  = xQueueCreate( 32, sizeof( char ) );
 	USART1_init();
 
 
@@ -306,11 +338,11 @@ int main(void)
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
 
 
-	/* Create task to monitor processor activity */
-	if (xTaskCreate(task_monitor, "Monitor", TASK_MONITOR_STACK_SIZE, NULL,
-			TASK_MONITOR_STACK_PRIORITY, NULL) != pdPASS) {
-		printf("Failed to create Monitor task\r\n");
-	}
+// 	/* Create task to monitor processor activity */
+// 	if (xTaskCreate(task_monitor, "Monitor", TASK_MONITOR_STACK_SIZE, NULL,
+// 			TASK_MONITOR_STACK_PRIORITY, NULL) != pdPASS) {
+// 		printf("Failed to create Monitor task\r\n");
+// 	}
 
 	/* Create task to make led blink */
 	if (xTaskCreate(task_led, "Led", TASK_LED_STACK_SIZE, NULL,
@@ -323,6 +355,14 @@ int main(void)
 	TASK_LED_STACK_PRIORITY, NULL) != pdPASS) {
 		printf("Failed to create test led task\r\n");
 	}
+	
+	/* Create task to make led blink */
+	if (xTaskCreate(task_uart, "uart", TASK_LED_STACK_SIZE, NULL,
+	TASK_LED_STACK_PRIORITY, NULL) != pdPASS) {
+		printf("Failed to create test led task\r\n");
+	}
+	
+	
 	
 	/* Start the scheduler. */
 	vTaskStartScheduler();
