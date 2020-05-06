@@ -174,7 +174,28 @@ void task_uart(void *pvParameters){
 	}
 }
 
+static void task_uartRX(void *pvParameters) {
+	char rxMsg;
+	char msgBuffer[64] = {0};
+	int i = 0;
 
+	xQueueReceive = xQueueCreate(32, sizeof(char));
+
+	
+	if (xQueueReceive(xQueueReceive, &rxMsg, (TickType_t)500)) {
+		printf("Recebido: %c\n", rxMsg);
+
+		if (rxMsg == '\n') {
+			msgBuffer[i] = 0;
+			xQueueSend(xQueueCommand, &msgBuffer, 0);
+			i = 0;
+			} else {
+			msgBuffer[i] = rxMsg;
+			i++;
+		}
+	}
+	
+}
 
 
 static void task_led(void *pvParameters)
