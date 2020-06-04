@@ -4,6 +4,21 @@
 #include "gfx_mono_text.h"
 #include "sysfont.h"
 
+#define BUT1_PIO      PIOD
+#define BUT1_PIO_ID   ID_PIOD
+#define BUT1_IDX  28
+#define BUT1_IDX_MASK (1 << BUT_IDX)
+
+#define BUT_PIO      PIOA
+#define BUT_PIO_ID   ID_PIOA
+#define BUT_IDX  11
+#define BUT_IDX_MASK (1 << BUT_IDX)
+
+#define BUT_PIO      PIOA
+#define BUT_PIO_ID   ID_PIOA
+#define BUT_IDX  11
+#define BUT_IDX_MASK (1 << BUT_IDX)
+
 int main (void)
 {
 	board_init();

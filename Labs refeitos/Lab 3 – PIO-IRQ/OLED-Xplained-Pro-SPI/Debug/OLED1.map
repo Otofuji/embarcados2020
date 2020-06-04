@@ -6956,7 +6956,7 @@ OUTPUT(OLED1.elf elf32-littlearm)
  .debug_ranges  0x000007c0       0x20 src/ASF/sam/utils/cmsis/same70/source/templates/system_same70.o
  .debug_ranges  0x000007e0       0x10 src/main.o
 
-.debug_macro    0x00000000    0x203a4
+.debug_macro    0x00000000    0x203ec
  .debug_macro   0x00000000      0x6d9 src/ASF/sam/drivers/spi/spi.o
  .debug_macro   0x000006d9      0x8ce src/ASF/sam/drivers/spi/spi.o
  .debug_macro   0x00000fa7      0x16d src/ASF/sam/drivers/spi/spi.o
@@ -7142,9 +7142,9 @@ OUTPUT(OLED1.elf elf32-littlearm)
  .debug_macro   0x0001f0e1      0x664 src/ASF/sam/utils/cmsis/same70/source/templates/gcc/startup_same70.o
  .debug_macro   0x0001f745       0x10 src/ASF/sam/utils/cmsis/same70/source/templates/gcc/startup_same70.o
  .debug_macro   0x0001f755      0x455 src/ASF/sam/utils/cmsis/same70/source/templates/system_same70.o
- .debug_macro   0x0001fbaa      0x7fa src/main.o
+ .debug_macro   0x0001fbaa      0x842 src/main.o
 
-.debug_line     0x00000000     0xd412
+.debug_line     0x00000000     0xd414
  .debug_line    0x00000000      0xc41 src/ASF/sam/drivers/spi/spi.o
  .debug_line    0x00000c41      0xe3f src/oled/gfx_mono_framebuffer.o
  .debug_line    0x00001a80      0xef3 src/oled/gfx_mono_generic.o
@@ -7161,9 +7161,9 @@ OUTPUT(OLED1.elf elf32-littlearm)
  .debug_line    0x0000a3a1     0x106b src/ASF/sam/drivers/pmc/pmc.o
  .debug_line    0x0000b40c      0xa73 src/ASF/sam/utils/cmsis/same70/source/templates/gcc/startup_same70.o
  .debug_line    0x0000be7f      0x7e9 src/ASF/sam/utils/cmsis/same70/source/templates/system_same70.o
- .debug_line    0x0000c668      0xdaa src/main.o
+ .debug_line    0x0000c668      0xdac src/main.o
 
-.debug_str      0x00000000    0x8f585
+.debug_str      0x00000000    0x8f617
  .debug_str     0x00000000    0x85e58 src/ASF/sam/drivers/spi/spi.o
                               0x86515 (size before relaxing)
  .debug_str     0x00085e58     0x2ad2 src/oled/gfx_mono_framebuffer.o
@@ -7196,8 +7196,8 @@ OUTPUT(OLED1.elf elf32-littlearm)
                               0x82718 (size before relaxing)
  .debug_str     0x0008f440      0x137 src/ASF/sam/utils/cmsis/same70/source/templates/system_same70.o
                               0x72824 (size before relaxing)
- .debug_str     0x0008f577        0xe src/main.o
-                              0x8c9d0 (size before relaxing)
+ .debug_str     0x0008f577       0xa0 src/main.o
+                              0x8ca62 (size before relaxing)
 
 .debug_frame    0x00000000     0x1278
  .debug_frame   0x00000000      0x140 src/ASF/sam/drivers/spi/spi.o

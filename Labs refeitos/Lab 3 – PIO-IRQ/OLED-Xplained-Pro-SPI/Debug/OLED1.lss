@@ -27,13 +27,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  11 .debug_ranges 000007f0  00000000  00000000  0003cf25  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_macro  000203a4  00000000  00000000  0003d715  2**0
+ 12 .debug_macro  000203ec  00000000  00000000  0003d715  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_line   0000d412  00000000  00000000  0005dab9  2**0
+ 13 .debug_line   0000d414  00000000  00000000  0005db01  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_str    0008f585  00000000  00000000  0006aecb  2**0
+ 14 .debug_str    0008f617  00000000  00000000  0006af15  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_frame  00001278  00000000  00000000  000fa450  2**2
+ 15 .debug_frame  00001278  00000000  00000000  000fa52c  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -3073,9 +3073,9 @@ void system_init_flash( uint32_t ul_clk )
   401250:	04000300 	.word	0x04000300
 
 00401254 <main>:
-#include "gfx_mono_ug_2832hsweg04.h"
-#include "gfx_mono_text.h"
-#include "sysfont.h"
+#define BUT_PIO_ID   ID_PIOA
+#define BUT_IDX  11
+#define BUT_IDX_MASK (1 << BUT_IDX)
 
 int main (void)
 {
